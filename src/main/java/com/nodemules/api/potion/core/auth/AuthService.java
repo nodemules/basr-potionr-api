@@ -39,8 +39,6 @@ public class AuthService implements AuthOperations {
   public void login(String login, String password) {
     User user = userMapper.toBean(userRepository.findByUsernameOrEmail(login));
 
-    log.info("Attempting to log in user [{}] with password [{}]", login, password);
-    log.info("User found: {}", user);
     if (user == null) {
       throw new AuthenticationException("Unable to login user: " + login);
     }
@@ -81,7 +79,6 @@ public class AuthService implements AuthOperations {
     User user = userMapper.toBean(userRepository.findByUsernameOrEmail(username, email));
 
     if (user != null) {
-      log.info("User is: {}", user);
       if (email.equals(user.getEmail())) {
         throw new RegistrationException("E-mail is taken");
       }

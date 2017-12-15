@@ -3,8 +3,10 @@ package com.nodemules.api.potion.controller;
 import com.nodemules.api.potion.core.auth.AuthOperations;
 import com.nodemules.api.potion.core.auth.AuthService;
 import com.nodemules.api.potion.core.auth.bean.RegistrationRequest;
+import com.nodemules.api.potion.security.SecurityUtil;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -29,8 +31,9 @@ public class AuthController {
   }
 
   @RequestMapping(value = "/login", method = RequestMethod.GET)
-  public void login(@RequestHeader String username, @RequestHeader String password) {
-    authService.login(username, password);
+  public void login(@RequestHeader String authorization) {
+    Pair<String, String> credentials = SecurityUtil.decodeAuthorizationKey(authorization);
+    authService.login(credentials.getKey(), credentials.getValue());
   }
 
   @RequestMapping(value = "/register", method = RequestMethod.POST)
