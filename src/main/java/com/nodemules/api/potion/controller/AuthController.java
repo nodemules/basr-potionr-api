@@ -31,13 +31,14 @@ public class AuthController {
   }
 
   @RequestMapping(value = "/login", method = RequestMethod.GET)
-  public void login(@RequestHeader String authorization) {
+  public void login(@RequestHeader(value = "Authorization") String authorization) {
     Pair<String, String> credentials = SecurityUtil.decodeAuthorizationKey(authorization);
     authService.login(credentials.getKey(), credentials.getValue());
   }
 
   @RequestMapping(value = "/register", method = RequestMethod.POST)
   public void register(@RequestBody @Valid RegistrationRequest registrationRequest) {
-    authService.register(registrationRequest.getUsername(), registrationRequest.getPassword(), registrationRequest.getEmail());
+    authService.register(registrationRequest.getUsername(), registrationRequest.getPassword(),
+        registrationRequest.getEmail());
   }
 }

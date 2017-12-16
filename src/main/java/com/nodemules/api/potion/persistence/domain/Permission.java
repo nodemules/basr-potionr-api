@@ -19,7 +19,7 @@ public class Permission {
   @Id
   @GeneratedValue
   @Column(name = "permission_id")
-  private Long id;
+  private Long permissionId;
   private String name;
 
 }

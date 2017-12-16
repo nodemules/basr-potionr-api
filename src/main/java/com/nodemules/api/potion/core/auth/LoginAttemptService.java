@@ -61,7 +61,7 @@ public class LoginAttemptService implements LoginAttemptOperations {
 
     LoginAttempt attempt = new LoginAttempt(userId, ipAddress, new Date(), userAgent);
 
-    int attempts = loginAttemptRepo.countByUserIdAndIpAddress(userId, ipAddress);
+    int attempts = loginAttemptRepo.countByUserUserIdAndIpAddress(userId, ipAddress);
 
     if (attempts >= MAX_ATTEMPTS) {
       loginAttemptLimitExceeded(attempt);
@@ -74,7 +74,7 @@ public class LoginAttemptService implements LoginAttemptOperations {
   public void checkBlacklist(Long userId) {
     String ipAddress = HttpRequestUtil.getIpAddress(request);
 
-    LoginBlacklist blacklist = loginBlacklistRepo.findByUserIdAndIpAddress(userId, ipAddress);
+    LoginBlacklist blacklist = loginBlacklistRepo.findByUserUserIdAndIpAddress(userId, ipAddress);
 
     if (blacklist != null && blacklist.getExpireTime().after(new Date())) {
       throw new LoginAttemptExceededException(

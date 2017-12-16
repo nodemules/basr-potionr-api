@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LoginAttemptRepository extends JpaRepository<LoginAttempt, Long> {
 
-  int countByUserIdAndIpAddress(Long userId, String ipAddress);
+  int countByUserUserIdAndIpAddress(Long userId, String ipAddress);
 }

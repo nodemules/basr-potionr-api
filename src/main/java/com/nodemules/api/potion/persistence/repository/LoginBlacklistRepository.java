@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LoginBlacklistRepository extends JpaRepository<LoginBlacklist, Long> {
 
-  LoginBlacklist findByUserIdAndIpAddress(Long userId, String ipAddress);
+  LoginBlacklist findByUserUserIdAndIpAddress(Long userId, String ipAddress);
 }

@@ -1,5 +1,6 @@
 package com.nodemules.api.potion.persistence.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,7 +20,8 @@ public class User {
 
   @Id
   @GeneratedValue
-  private Long id;
+  @Column(name = "user_id")
+  private Long userId;
   private String username;
   private String email;
   private String password;

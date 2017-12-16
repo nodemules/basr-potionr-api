@@ -2,6 +2,7 @@ package com.nodemules.api.potion.persistence.domain;
 
 import com.nodemules.api.potion.core.auth.IpAddress;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -24,6 +25,7 @@ public class LoginBlacklist {
 
   @Id
   @GeneratedValue
+  @Column(name = "login_blacklist_id")
   private Long loginBlacklistId;
 
   @ManyToOne
