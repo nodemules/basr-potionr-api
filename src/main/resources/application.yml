@@ -1,0 +1,27 @@
+security:
+  require-ssl: true
+server:
+  port: 8443
+  ssl:
+  # these fields are required and can be generated from: https://gist.github.com/e86fca82ad71ce2bdc7940166c4c5b70
+    key-store-type: # required e.g. PKCS12
+    key-store: # required e.g. classpath:keystore.p12
+    key-store-password: # required
+    key-alias: #required e.g. tomcat
+
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/basr_potionr
+    username: basr_potionr_api
+    password: # required
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      ddl-auto: create-drop
+
+rabbitmq:
+  host: # required
+  port: # required
+  username: # required
+  password: # required
