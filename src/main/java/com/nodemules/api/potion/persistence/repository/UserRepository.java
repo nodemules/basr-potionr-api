@@ -1,4 +1,4 @@
-package com.nodemules.api.potion.peristence.repository;
+package com.nodemules.api.potion.persistence.repository;
 
 import com.nodemules.api.potion.persistence.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;

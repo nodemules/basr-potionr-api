@@ -1,4 +1,4 @@
-package com.nodemules.api.potion.core.pot.Potion;
+package com.nodemules.api.potion.core.pot.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

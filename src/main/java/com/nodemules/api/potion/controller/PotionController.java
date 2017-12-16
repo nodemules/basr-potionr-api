@@ -1,6 +1,6 @@
 package com.nodemules.api.potion.controller;
 
-import com.nodemules.api.potion.core.pot.Potion.Potion;
+import com.nodemules.api.potion.core.pot.bean.Potion;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

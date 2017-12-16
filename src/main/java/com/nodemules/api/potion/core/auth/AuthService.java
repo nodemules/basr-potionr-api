@@ -1,7 +1,7 @@
 package com.nodemules.api.potion.core.auth;
 
 import com.nodemules.api.potion.core.auth.bean.User;
-import com.nodemules.api.potion.peristence.repository.UserRepository;
+import com.nodemules.api.potion.persistence.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -24,13 +24,17 @@ public class AuthService implements AuthOperations {
 
   private UserRepository userRepository;
 
+  private LoginAttemptOperations loginAttemptService;
+
   private UserMapper userMapper;
 
   private PasswordEncoder passwordEncoder;
 
   @Autowired
-  public AuthService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+  public AuthService(UserRepository userRepository, LoginAttemptService loginAttemptService,
+      UserMapper userMapper, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
+    this.loginAttemptService = loginAttemptService;
     this.userMapper = userMapper;
     this.passwordEncoder = passwordEncoder;
   }
@@ -43,22 +47,15 @@ public class AuthService implements AuthOperations {
       throw new AuthenticationException("Unable to login user: " + login);
     }
 
+    loginAttemptService.checkBlacklist(user.getId());
+
     if (!passwordEncoder.matches(password, user.getPassword())) {
+      loginAttemptService.loginFailed(user.getId());
       throw new AuthenticationException("Unable to authenticate");
     }
 
+    loginAttemptService.loginSuccess(user.getId());
     setAuthentication(user);
-  }
-
-  private void setAuthentication(User user) {
-    List<? extends GrantedAuthority> permissions = new ArrayList<>();
-    if (user.getRole() != null && !CollectionUtils.isEmpty(user.getRole().getPermissions())) {
-      permissions = user.getRole().getPermissions();
-    }
-
-    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user.getUsername(), null, permissions);
-    SecurityContextHolder.getContext().setAuthentication(auth);
-
   }
 
   @Override
@@ -73,6 +70,17 @@ public class AuthService implements AuthOperations {
     userRepository.save(userMapper.toEntity(user));
 
     setAuthentication(user);
+  }
+
+  private void setAuthentication(User user) {
+    List<? extends GrantedAuthority> permissions = new ArrayList<>();
+    if (user.getRole() != null && !CollectionUtils.isEmpty(user.getRole().getPermissions())) {
+      permissions = user.getRole().getPermissions();
+    }
+
+    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+        user.getUsername(), null, permissions);
+    SecurityContextHolder.getContext().setAuthentication(auth);
   }
 
   private void checkIfUserExists(@NotNull String username, @NotNull String email) {
