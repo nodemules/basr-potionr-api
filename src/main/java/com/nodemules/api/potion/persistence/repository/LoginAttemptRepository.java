@@ -1,6 +1,7 @@
 package com.nodemules.api.potion.persistence.repository;
 
 import com.nodemules.api.potion.persistence.domain.LoginAttempt;
+import java.util.Date;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LoginAttemptRepository extends JpaRepository<LoginAttempt, Long> {
 
-  int countByUserUserIdAndIpAddress(Long userId, String ipAddress);
+  int countByUserUserIdAndIpAddressAndAttemptTimeAfter(Long userId, String ipAddress,
+      Date attemptTime);
 }

@@ -23,6 +23,8 @@ public class LoginAttemptService implements LoginAttemptOperations {
   private static final int MAX_ATTEMPTS = 5;
   private static final int EXPIRE_TIME_DURATION_MINUTES = 5;
   private static final int EXPIRE_TIME_DURATION = EXPIRE_TIME_DURATION_MINUTES * 60 * 1000;
+  private static final int BLACKLIST_WINDOW_MINUTES = 5;
+  private static final int BLACKLIST_WINDOW = BLACKLIST_WINDOW_MINUTES * 60 * 1000;
 
   private HttpServletRequest request;
   private LoginAttemptRepository loginAttemptRepo;
@@ -61,20 +63,26 @@ public class LoginAttemptService implements LoginAttemptOperations {
 
     LoginAttempt attempt = new LoginAttempt(userId, ipAddress, new Date(), userAgent);
 
-    int attempts = loginAttemptRepo.countByUserUserIdAndIpAddress(userId, ipAddress);
+    loginAttemptRepo.save(mapper.toAttemptEntity(attempt));
 
-    if (attempts >= MAX_ATTEMPTS) {
+    Date blacklistIntervalCheck = new Date(new Date().getTime() - BLACKLIST_WINDOW);
+
+    int attempts = loginAttemptRepo
+        .countByUserUserIdAndIpAddressAndAttemptTimeAfter(userId, ipAddress,
+            blacklistIntervalCheck);
+
+    if (attempts > MAX_ATTEMPTS) {
       loginAttemptLimitExceeded(attempt);
     }
 
-    loginAttemptRepo.save(mapper.toAttemptEntity(attempt));
   }
 
   @Override
   public void checkBlacklist(Long userId) {
     String ipAddress = HttpRequestUtil.getIpAddress(request);
 
-    LoginBlacklist blacklist = loginBlacklistRepo.findByUserUserIdAndIpAddress(userId, ipAddress);
+    LoginBlacklist blacklist = loginBlacklistRepo
+        .findTopByUserUserIdAndIpAddressOrderByExpireTimeDesc(userId, ipAddress);
 
     if (blacklist != null && blacklist.getExpireTime().after(new Date())) {
       throw new LoginAttemptExceededException(

@@ -13,7 +13,9 @@ import fr.xebia.extras.selma.Maps;
  * @author brent
  * @since 12/14/17.
  */
-@Mapper(withIgnoreMissing = IgnoreMissing.ALL, withIoC = IoC.SPRING)
+@Mapper(withIgnoreMissing = IgnoreMissing.ALL, withIoC = IoC.SPRING, withCustomFields = {
+    @Field(value = {"id", "userId"})
+})
 public interface UserMapper {
 
   User toBean(com.nodemules.api.potion.persistence.domain.User entity);

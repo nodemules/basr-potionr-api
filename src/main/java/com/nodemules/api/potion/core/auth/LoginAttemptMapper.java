@@ -3,6 +3,7 @@ package com.nodemules.api.potion.core.auth;
 import com.nodemules.api.potion.core.auth.model.LoginAttempt;
 import com.nodemules.api.potion.persistence.domain.LoginBlacklist;
 import com.nodemules.api.potion.persistence.domain.LoginSuccess;
+import fr.xebia.extras.selma.Field;
 import fr.xebia.extras.selma.IgnoreMissing;
 import fr.xebia.extras.selma.IoC;
 import fr.xebia.extras.selma.Mapper;
@@ -13,7 +14,8 @@ import fr.xebia.extras.selma.Mapper;
  */
 @Mapper(
     withIgnoreMissing = IgnoreMissing.ALL,
-    withIoC = IoC.SPRING)
+    withIoC = IoC.SPRING,
+    withCustomFields = {@Field(value = {"userId", "user.userId"})})
 public interface LoginAttemptMapper {
 
   LoginAttempt toModel(com.nodemules.api.potion.persistence.domain.LoginAttempt entity);
