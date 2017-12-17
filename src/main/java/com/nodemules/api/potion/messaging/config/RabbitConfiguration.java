@@ -1,10 +1,8 @@
-package com.nodemules.api.potion.config;
+package com.nodemules.api.potion.messaging.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfiguration {
 
-  private static final String SIMPLE_MESSAGE_QUEUE = "potion.brew";
   private RabbitProperties rabbitProperties;
 
   @Autowired
@@ -39,21 +36,8 @@ public class RabbitConfiguration {
   }
 
   @Bean
-  public Queue simpleQueue() {
-    return new Queue(SIMPLE_MESSAGE_QUEUE);
-  }
-
-  @Bean
   public MessageConverter jsonMessageConverter() {
     return new Jackson2JsonMessageConverter();
-  }
-
-  @Bean
-  public RabbitTemplate rabbitTemplate() {
-    RabbitTemplate template = new RabbitTemplate(connectionFactory());
-    template.setRoutingKey(SIMPLE_MESSAGE_QUEUE);
-    template.setMessageConverter(jsonMessageConverter());
-    return template;
   }
 
 }

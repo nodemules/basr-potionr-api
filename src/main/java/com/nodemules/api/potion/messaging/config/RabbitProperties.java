@@ -1,4 +1,4 @@
-package com.nodemules.api.potion.config;
+package com.nodemules.api.potion.messaging.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
