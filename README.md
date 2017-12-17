@@ -7,4 +7,4 @@ Related projects:
 
 Built with [Spring Boot](https://github.com/spring-projects/spring-boot)
 
-Using technologies including REST, AMQP, JPA, MySQL 
+Using technologies including REST, AMQP, JPA, MySQL
