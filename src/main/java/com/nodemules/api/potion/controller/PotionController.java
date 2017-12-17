@@ -3,9 +3,12 @@ package com.nodemules.api.potion.controller;
 import com.nodemules.api.potion.core.pot.PotionOperations;
 import com.nodemules.api.potion.core.pot.PotionService;
 import com.nodemules.api.potion.core.pot.bean.Potion;
+import com.nodemules.api.potion.core.pot.bean.PotionType;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -23,13 +26,13 @@ public class PotionController {
     this.potionService = potionService;
   }
 
-  @RequestMapping
-  public Potion getRandomPotion() {
-    return new Potion("fizz", 0xEFEFEF);
+  @RequestMapping(value = "/type")
+  public List<PotionType> getPotionTypes() {
+    return potionService.getPotionTypes();
   }
 
-  @RequestMapping("/brew")
-  public void brewPotion(@RequestParam String name) {
-    potionService.brewPotion(new Potion(name, 0));
+  @RequestMapping(value = "/brew", method = RequestMethod.POST)
+  public void brewPotion(@RequestBody Potion potion) {
+    potionService.brewPotion(potion);
   }
 }

@@ -37,7 +37,7 @@ public class PotionQueueFactory {
     Map<String, Object> args = new HashMap<>();
     args.put("x-dead-letter-exchange", "");
     args.put("x-dead-letter-routing-key", QUEUE_POTION_BREWED);
-    args.put("x-message-ttl", 10000);
+    args.put("x-message-ttl", 60000);
     return new Queue(QUEUE_POTION_BREWING, false, false, false, args);
   }
 
