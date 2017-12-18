@@ -1,5 +1,7 @@
 package com.nodemules.api.potion.core.pot.bean;
 
+import com.nodemules.api.potion.core.auth.bean.User;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +15,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Potion {
 
-  private int brewTime;
+  private Long id;
   private String name;
-  private int color;
+  private PotionType type;
+  private String flavorText;
+  private Date brewDate;
+
+  private User brewer;
+
+  public Potion(PotionType type) {
+    this.type = type;
+  }
 }

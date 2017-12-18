@@ -5,6 +5,7 @@ import com.nodemules.api.potion.core.pot.PotionService;
 import com.nodemules.api.potion.core.pot.bean.Potion;
 import com.nodemules.api.potion.core.pot.bean.PotionType;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author brent
  * @since 12/14/17.
  */
+@Slf4j
 @RestController
 @RequestMapping("/potion")
 public class PotionController {
@@ -32,7 +34,7 @@ public class PotionController {
   }
 
   @RequestMapping(value = "/brew", method = RequestMethod.POST)
-  public void brewPotion(@RequestBody Potion potion) {
-    potionService.brewPotion(potion);
+  public void brewPotion(@RequestBody PotionType potionType) {
+    potionService.brewPotion(new Potion(potionType));
   }
 }

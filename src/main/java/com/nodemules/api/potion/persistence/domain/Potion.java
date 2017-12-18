@@ -28,10 +28,11 @@ public class Potion {
 
   @ManyToOne
   @JoinColumn(name = "potion_type_id")
-  private PotionType potionType;
+  private PotionType type;
 
   private String name;
 
+  @Column(length = 4000)
   private String flavorText;
 
   @Temporal(TemporalType.TIMESTAMP)

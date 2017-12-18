@@ -1,12 +1,10 @@
-package com.nodemules.api.potion.core.pot;
+package com.nodemules.api.potion.core.pot.messaging;
 
-import com.nodemules.api.potion.core.pot.bean.PotionBrewedConsumer;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +23,13 @@ public class PotionQueueFactory {
 
   private ConnectionFactory connectionFactory;
   private MessageConverter jsonMessageConverter;
+  private PotionBrewedConsumer potionBrewingConsumer;
 
   @Autowired
-  public PotionQueueFactory(ConnectionFactory connectionFactory, MessageConverter jsonMessageConverter) {
+  public PotionQueueFactory(ConnectionFactory connectionFactory, MessageConverter jsonMessageConverter, PotionBrewedConsumer potionBrewedConsumer) {
     this.connectionFactory = connectionFactory;
     this.jsonMessageConverter = jsonMessageConverter;
+    this.potionBrewingConsumer = potionBrewedConsumer;
   }
 
   @Bean
@@ -39,15 +39,6 @@ public class PotionQueueFactory {
     args.put("x-dead-letter-routing-key", QUEUE_POTION_BREWED);
     args.put("x-message-ttl", 60000);
     return new Queue(QUEUE_POTION_BREWING, false, false, false, args);
-  }
-
-  @Bean
-  public RabbitTemplate potionBrewingTemplate() {
-    RabbitTemplate template = new RabbitTemplate(connectionFactory);
-    template.setMessageConverter(jsonMessageConverter);
-    template.setQueue(QUEUE_POTION_BREWING);
-    template.setRoutingKey(QUEUE_POTION_BREWING);
-    return template;
   }
 
   @Bean
@@ -61,7 +52,7 @@ public class PotionQueueFactory {
     listenerContainer.setConnectionFactory(connectionFactory);
     listenerContainer.setQueues(potionBrewed());
     listenerContainer.setMessageConverter(jsonMessageConverter);
-    listenerContainer.setMessageListener(new PotionBrewedConsumer());
+    listenerContainer.setMessageListener(potionBrewingConsumer);
     listenerContainer.setAcknowledgeMode(AcknowledgeMode.AUTO);
     return listenerContainer;
   }

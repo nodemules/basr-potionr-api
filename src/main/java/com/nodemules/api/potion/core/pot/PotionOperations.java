@@ -16,6 +16,10 @@ public interface PotionOperations {
    */
   void brewPotion(Potion potion);
 
+  void brewUniquePotion(Potion potion);
+
+  void savePotion(Potion potion);
+
   /**
    * Gets a list of potion types.
    *
