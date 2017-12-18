@@ -1,5 +1,9 @@
 package com.nodemules.api.potion.core.pot.messaging;
 
+import com.nodemules.api.potion.core.currency.CurrencyOperations;
+import com.nodemules.api.potion.core.currency.CurrencyService;
+import com.nodemules.api.potion.core.experience.ExperienceOperations;
+import com.nodemules.api.potion.core.experience.ExperienceService;
 import com.nodemules.api.potion.core.pot.PotionOperations;
 import com.nodemules.api.potion.core.pot.PotionService;
 import com.nodemules.api.potion.core.pot.bean.Potion;
@@ -22,27 +26,30 @@ public class PotionBrewedConsumer implements MessageListener {
   private static final Random random = new Random();
 
   private PotionOperations potionService;
+  private ExperienceOperations experienceService;
+  private CurrencyOperations currencyService;
 
   @Autowired
-  public PotionBrewedConsumer(PotionService potionService) {
+  public PotionBrewedConsumer(PotionService potionService, ExperienceService experienceService,
+      CurrencyService currencyService) {
     this.potionService = potionService;
+    this.experienceService = experienceService;
+    this.currencyService = currencyService;
   }
 
   @Override
   public void onMessage(Message message) {
     Potion potion = MessageUtil.parse(message, Potion.class);
+    boolean unique = false;
     log.info("A potion was brewed: {}", potion);
-    // potionService.generateExperience(potion);
-    // potionService.generateCurrency(potion);
     if (random.nextBoolean()) {
+      unique = true;
       log.info("Brewing a unique potion!");
       potionService.brewUniquePotion(potion);
-      // potionService.generateExperience(potion);
-      // potionService.generateCurrency(potion);
     }
-    // send message about experience generated
-    // send message about currency generated
-    // send message about unique potion generated
+    currencyService.grantUserCurrencyForPotionBrewed(potion.getBrewer(), potion.getType(), unique);
+    experienceService
+        .grantUserExperienceForPotionBrewed(potion.getBrewer(), potion.getType(), unique);
 
   }
 }

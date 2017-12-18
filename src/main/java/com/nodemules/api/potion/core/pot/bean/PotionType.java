@@ -13,4 +13,5 @@ public class PotionType {
   private String name;
   private int color;
   private int brewTime;
+  private float xpMultiplier;
 }

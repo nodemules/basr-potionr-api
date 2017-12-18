@@ -18,4 +18,6 @@ public class User {
   private String password;
   private Role role;
 
+  private int level = 1;
+
 }
